@@ -12,7 +12,8 @@ function RenderLeader({leaders}){
             
                             </Media>
                             <Media body className='ml-5'>
-                            <Media heading>{leader.name}</Media> 
+                            <Media heading>{leader.name}</Media>
+                            <h6> {leader.designation}</h6> 
                             <p> {leader.description}</p>
                             </Media>
                         </Media>
