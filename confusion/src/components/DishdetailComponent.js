@@ -1,7 +1,108 @@
-import React  from 'react';
-import {Card, CardHeader, CardImg,  CardText, CardBody, CardTitle,Breadcrumb,BreadcrumbItem } from 'reactstrap';
-import {Link} from 'react-router-dom'
+import React,{Component}  from 'react';
+import {Card, CardHeader, CardImg,  CardText, CardBody, CardTitle,Breadcrumb,BreadcrumbItem,Button,Modal,Label,Col,Row,ModalBody,ModalHeader } from 'reactstrap';
+import {Link} from 'react-router-dom';
+import { LocalForm, Control,Errors } from 'react-redux-form';
 
+const required = (val) => val && val.length;
+const maxlength = (len) => (val) => !(val) || (val.length <= len);
+const minlength = (len) => (val) => (val) && (val.length >= len);
+
+class CommentForm extends Component {
+    constructor(props){
+        super(props)
+    this.state={
+       
+        isModalOpen: false
+    };
+   
+    this.toggleModal=this.toggleModal.bind(this);
+    this.handleSubmit=this.handleSubmit.bind(this);
+}
+    toggleModal(){
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        })
+    }
+    handleSubmit(values){
+        
+        console.log('current state is :'+JSON.stringify(values));
+        alert('current state is :'+JSON.stringify(values));
+      
+    }
+    render(){
+        return(
+            <>
+            <Button className='col-5 ml-2 mb-2' outline onClick={this.toggleModal}>
+            <span className="fa fa-pencil" /> Submit Comment
+            </Button>
+
+            <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+            <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+            <ModalBody>
+            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+
+                <Row className='form-group'>
+                    <Label md={12} htmlFor='rating'>Rating</Label>
+                    <Col md={{size: 12}}>
+                    <Control.select model='.rating'name='rating'
+                    className='form-control'
+                    >
+
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        
+                    </Control.select>
+                    </Col>
+                </Row>
+                <Row className='form-group'>
+                    <Label md={12} htmlFor='author'>Your Name</Label>
+                    <Col md={12}>
+                        <Control.text  model='.author' id='author' name='author'
+                        placeholder='Your Name' className='form-control'
+                        validators={{
+                            required,
+                            minlength:minlength(2),
+                            maxlength:maxlength(15)}}/>
+                        
+                        <Errors className='text-danger'
+                        model='.author'
+                        show='touched'
+                        messages={{
+                            required: 'Required',
+                            minlength : 'Must be greater than 2 characters',
+                            maxlength : 'Must be less  than 15 characters'
+                        }} />
+                    </Col>
+                </Row>
+                <Row className='form-group'>
+                    <Label md={12} htmlFor='comment'>Comment</Label>
+                    <Col md={12}>
+                    <Control.textarea model='.comment' id='comment' name='comment' 
+                    rows='6'  className='form-control'
+                    validators={{
+                        required}}/>
+                    
+                    <Errors className='text-danger'
+                    model='.comment'
+                    show='touched'
+                    messages={{
+                        required: 'Required',
+                       
+                    }} />
+                    </Col>
+                </Row>
+
+                <Button type='submit' value='submit' className='primary' onClick={this.toggleModal}>Submit</Button>
+                </LocalForm>
+            </ModalBody>
+            </Modal>
+            </>
+        );
+    }
+}
 
     function RenderDish ({dish}){
      
@@ -63,6 +164,7 @@ import {Link} from 'react-router-dom'
                <Card>
                     <CardHeader><h4>Comments</h4></CardHeader>
                         {comments}
+                        <CommentForm/>
             </Card>
             </div>
             );
