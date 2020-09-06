@@ -2,6 +2,7 @@ import React,{Component}  from 'react';
 import {Card, CardHeader, CardImg,  CardText, CardBody, CardTitle,Breadcrumb,BreadcrumbItem,Button,Modal,Label,Col,Row,ModalBody,ModalHeader } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { LocalForm, Control,Errors } from 'react-redux-form';
+import Loading from "./LoadingComponent"
 
 const required = (val) => val && val.length;
 const maxlength = (len) => (val) => !(val) || (val.length <= len);
@@ -24,9 +25,10 @@ class CommentForm extends Component {
         })
     }
     handleSubmit(values){
+        this.toggleModal()
         
-        console.log('current state is :'+JSON.stringify(values));
-        alert('current state is :'+JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+
       
     }
     render(){
@@ -95,7 +97,7 @@ class CommentForm extends Component {
                     </Col>
                 </Row>
 
-                <Button type='submit' value='submit' className='primary' onClick={this.toggleModal}>Submit</Button>
+                <Button  type='submit' value='submit' className='btn btn-primary' >Submit</Button>
                 </LocalForm>
             </ModalBody>
             </Modal>
@@ -104,9 +106,27 @@ class CommentForm extends Component {
     }
 }
 
-    function RenderDish ({dish}){
+    function RenderDish ({dish, isLoading,error}){
+        if(isLoading){
+            return(
+                <div className='conatiner'>
+                    <div className='row'>
+                       <Loading/> 
+                    </div>
+                </div>
+            )
+        }
+        else if(error){
+            return(
+                <div className="container">
+                    <div className='row'>
+                        <h4>{error}</h4>
+                    </div>
+                </div>
+            )
+        }
      
-        if( dish != null){
+        else if( dish != null){
             
             return(
                 <div className='col-12 col-md-5 m-1'>
@@ -130,7 +150,7 @@ class CommentForm extends Component {
         }
     }
    
-    function RenderComment({comment}){
+    function RenderComment({comment , addComment,dishId}){
         
         if( comment == null){
            
@@ -164,7 +184,7 @@ class CommentForm extends Component {
                <Card>
                     <CardHeader><h4>Comments</h4></CardHeader>
                         {comments}
-                        <CommentForm/>
+                        <CommentForm addComment={addComment} dishId={dishId}/>
             </Card>
             </div>
             );
@@ -173,6 +193,7 @@ class CommentForm extends Component {
         
    
    const Dishdetail=(props)=>{
+      
         return(
             <div className='container'>
                 <div className='row'>
@@ -189,8 +210,10 @@ class CommentForm extends Component {
                 </div>
                 <div className='row'>
                 
-                <RenderDish dish={props.dish} />
-                <RenderComment comment={props.comments} />
+                <RenderDish dish={props.dish} isLoading={props.isLoading} error={props.error} />
+                <RenderComment comment={props.comments} 
+                addComment={props.addComment}
+                dishId={props.dish.id}/>
 
                 </div>
             </div>
