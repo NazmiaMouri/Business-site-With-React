@@ -2,7 +2,8 @@ import React,{Component}  from 'react';
 import {Card, CardHeader, CardImg,  CardText, CardBody, CardTitle,Breadcrumb,BreadcrumbItem,Button,Modal,Label,Col,Row,ModalBody,ModalHeader } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { LocalForm, Control,Errors } from 'react-redux-form';
-import Loading from "./LoadingComponent"
+import Loading from "./LoadingComponent";
+import {baseUrl} from '../shared/baseURL'
 
 const required = (val) => val && val.length;
 const maxlength = (len) => (val) => !(val) || (val.length <= len);
@@ -131,7 +132,7 @@ class CommentForm extends Component {
             return(
                 <div className='col-12 col-md-5 m-1'>
                     <Card >
-                        < CardImg width='100%' src={dish.image} alt={dispatchEvent.name}></ CardImg>
+                        < CardImg width='100%' src={baseUrl + dish.image} alt={dispatchEvent.name}></ CardImg>
                         <CardBody>
                             <CardTitle heading>{dish.name}</CardTitle> 
                             <CardText>{dish.description}</CardText>
@@ -193,6 +194,7 @@ class CommentForm extends Component {
         
    
    const Dishdetail=(props)=>{
+  
       
         return(
             <div className='container'>
@@ -219,6 +221,6 @@ class CommentForm extends Component {
             </div>
         ); 
     }
-      
+
 
 export default Dishdetail;
